@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+<<<<<<< HEAD
 import FacebookLogin from 'react-facebook-login';
 import { Grid, Row } from 'react-bootstrap';
 import NavTabs from './app/components/NavTabs';
@@ -97,6 +98,49 @@ class App extends Component {
 			</Grid>
 	      </div>
 	    );
+=======
+import { fetchUsers, deleteUser, addUser } from './models/Users';
+
+localStorage.Users = '[]';
+
+class App extends Component {
+
+  componentDidMount() {
+    const user = {
+      name: 'Sergey',
+      sex: 'male',
+      age: '26',
+      id: '1'
+    };
+
+    addUser(user);
+  }
+
+  handleIvent() {
+    console.log(fetchUsers());
+  }
+
+  render() {
+
+    const user = {
+      name: 'Kos',
+      sex: 'male',
+      age: '26',
+      id: '2'
+    };
+    addUser(user);
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <p onClick={this.handleIvent} className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+
+      </div>
+    );
+>>>>>>> f2ed736c4e71ff89f9b3b8b8e9cdc8ff1b1e60b4
   }
 }
 
