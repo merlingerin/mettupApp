@@ -4,14 +4,25 @@ import FacebookLogin from 'react-facebook-login';
 import { Grid, Row } from 'react-bootstrap';
 import NavTabs from './app/components/NavTabs';
 import MettupRegistration from './app/components/MettupRegistration';
-import VisitorList from './app/components/VisitorList';
+import Visitors from './app/components/Visitors';
+import { fetchUsers, addUser, deleteUser } from './app/models/Users';
+
+
+let store = (function () {
+	if(localStorage.Users) {
+		return false;
+	} else {
+		localStorage.Users = '[]';
+	}
+}());
+
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			login: false,
-			activeTab: 1
+			activeTab: 1,
 		}
 		this.ckeckTocken = this.ckeckTocken.bind(this);
 		this.responseFacebook = this.responseFacebook.bind(this);
@@ -19,19 +30,35 @@ class App extends Component {
 	}
 
 	responseFacebook(response) {
-	  console.log(response);
 	  this.ckeckTocken(response);
 	}
 
 	ckeckTocken(response) {
+		const Users = fetchUsers();
+
 		if(!response.accessToken) {
 			return false;
 		} else {
-			this.setState({
-				login: true,
-				data: response
-			})
+			const exist = Users.filter((user) => {
+				return user.userID === response.userID;
+			});
+			if(exist.length) {
+				console.log('exist', exist);
+				this.setState({
+					login: true,
+					exist: !!exist.length,
+					data: exist[0],
+				})
+			} else {
+				this.setState({
+					login: true,
+					exist: !!exist.length,
+					data: response,
+				})
+			}
 		}
+
+		console.log('data', this.state);
 	}
 
 	changeTabs(key) {
@@ -62,8 +89,8 @@ class App extends Component {
 					: 	<NavTabs
 							activeTab={this.state.activeTab}
 							changeTabs={this.changeTabs}
-							MettupRegistration = {<MettupRegistration name={ this.state.data.name } user_id={ this.state.data.id } />}
-							VisitorList = {<VisitorList name={this.state.data.name} />}
+							MettupRegistration = {<MettupRegistration exist={this.state.exist} data={ this.state.data } />}
+							Visitors = {<Visitors users={this.state.users} data={ this.state.data } />}
 						/>
 					}
 				</Row>

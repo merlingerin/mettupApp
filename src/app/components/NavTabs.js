@@ -9,12 +9,12 @@ const NavTabs = (props) => {
 	};
 	console.log('props', props);
 	return (
-		<div className="container">
+		<div className="container mettup__container">
 			<Nav bsStyle="tabs" justified activeKey={props.activeTab} onSelect={handleSelect}>
 				<NavItem eventKey={1} title="My Answer" >My Answer</NavItem>
 				<NavItem eventKey={2} title="All Answer">All Answer</NavItem>
 			</Nav>
-			{ props.activeTab === 1 ? props.MettupRegistration : props.VisitorList }
+			{ props.activeTab === 1 ? props.MettupRegistration : props.Visitors }
 		</div>
 	);
 };
