@@ -5227,7 +5227,6 @@ react-scripts@1.0.16:
   optionalDependencies:
     fsevents "1.1.2"
 
-<<<<<<< HEAD
 react-transition-group@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-1.2.1.tgz#e11f72b257f921b213229a774df46612346c7ca6"
@@ -5238,8 +5237,6 @@ react-transition-group@^1.2.0:
     prop-types "^15.5.6"
     warning "^3.0.0"
 
-=======
->>>>>>> f2ed736c4e71ff89f9b3b8b8e9cdc8ff1b1e60b4
 react@^16.0.0:
   version "16.0.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.0.0.tgz#ce7df8f1941b036f02b2cca9dbd0cb1f0e855e2d"

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { FormControl, FormGroup, ControlLabel, Button, Col, Row } from 'react-bootstrap';
-import { fetchUsers, addUser, deleteUser, updateUser } from '../models/Users';
+import { FormControl, FormGroup, ControlLabel, Button, Col } from 'react-bootstrap';
+import { addUser, deleteUser, updateUser, getUser } from '../models/Users';
 
 function FieldGroup({ id, label, help, ...props }) {
   return (
@@ -11,11 +11,11 @@ function FieldGroup({ id, label, help, ...props }) {
   );
 }
 
+//===============CREATE TEMPLATE FOR REGISTRATION FORM==============//
 const FormTemplate = (props) => {
-	console.log('props.value', props.value);
 	return (
-		<Col>
-			<form onSubmit={props.handleSubmit}>
+		<Col className="mettup__form">
+			<form onSubmit={props.handleSubmit} >
 				<FieldGroup
 					id="name"
 					type="text"
@@ -25,22 +25,21 @@ const FormTemplate = (props) => {
 					onChange={props.handleInput}
 					placeholder="Enter your name"
 				/>
-				<FormGroup controlId="formHorizontalEmail">
-					<Row>
-						<Col componentClass={ControlLabel} sm={8}>
-							With Me
-						</Col>
-						<Col sm={4}>
-							<FormControl name="withMe" onChange={props.handleInput} type="number" value={props.value.withMe} min="0" placeholder="" />
-						</Col>
-					</Row>
+				<FormGroup controlId="formHorizontalEmail" 
+							className="meetup__input">
+					<Col componentClass={ControlLabel} >
+						With Me
+					</Col>
+					<Col >
+						<FormControl name="withMe" onChange={props.handleInput} type="number" value={props.value.withMe} min="0" placeholder="" />
+					</Col>
 				</FormGroup>
-				<FormGroup controlId="formControlsSelect">
-					<ControlLabel>Select</ControlLabel>
+				<FormGroup controlId="formControlsSelect" >
+					<ControlLabel></ControlLabel>
 					<FormControl value={props.value.decide} onChange={props.handleInput} name="decide" componentClass="select" placeholder="select">
-						<option value="-1" default>Need to decide</option>
-						<option value="1">Yes</option>
-						<option value="0">No</option>
+						<option value="-1" default>Нужно выбрать</option>
+						<option value="1">Я точно приду</option>
+						<option value="0">Я точно не приду</option>
 					</FormControl>
 				</FormGroup>
 				<Button type="submit">
@@ -58,36 +57,48 @@ export default class MettupRegistration extends Component {
 			name: this.props.data.name,
 			withMe: this.props.data.withMe || 0,
 			decide: this.props.data.decide || -1,
-			userID: 235634657,
+			userID: this.props.data.userID,
 			picture: this.props.exist ? this.props.data.picture : this.props.data.picture.data.url
 		}
 		this.handleInput = this.handleInput.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
+	componentDidMount() {
+		const userData = getUser(this.state.userID);
+		userData.length > 0 ? 	this.setState({ ...userData[0] }) : false;
+	}
+
 	handleInput(e) {
 		this.setState({ [e.target.name]: e.target.value });
 	}
-
+	
 	handleSubmit(e) {
 		e.preventDefault();
-		const users = fetchUsers();
-		const exist = users.some((user) => {
-			return +user.userID === +this.state.userID;
-		});
-		console.log('exist', exist);
+		const exist = getUser(this.state.userID);
+		
 		if( +this.state.decide === -1 ) {
-			exist ? deleteUser(+this.state.userID) : false;
+			exist.length > 0 ? deleteUser(+this.state.userID) : false;
+			this.props.openModal(undefined);
+			this.props.refreshState();
+			
 		} else {
-			exist ? updateUser(this.state) : addUser(this.state);
+			if( exist.length > 0 ) {
+				updateUser(this.state);
+				this.props.refreshState();
+			} else {
+				addUser(this.state);
+				this.props.refreshState();
+			}
 		}
 	}
+
 	render() {
 		console.log('thisPROPS', this.props);
 
 		return (
 			<div className="tab__container">
-				<h1>MettupRegistration</h1>
+				<h1>Мой ответ:</h1>
 				<FormTemplate value={this.state} handleInput={this.handleInput} handleSubmit={this.handleSubmit} />
 			</div>
 		);

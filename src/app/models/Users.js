@@ -1,3 +1,4 @@
+//===================FETCH USERS FROM STORAGE================//
 const fetchUsers = () => {
     let Users;
     try {
@@ -8,37 +9,44 @@ const fetchUsers = () => {
             error: err
         })
     }
-	console.log('FETCH USER', Users);
 
     return Users;
 }
 
+//===================DELETE USER FROM STORAGE BY ID================//
 const deleteUser = (id) => {
     const Users = fetchUsers();
     let newUsers = Users.filter((user) => {
         return +user.userID !== +id;
     });
-	console.log('DELETE USER', newUsers);
 
     localStorage.Users = JSON.stringify(newUsers);
 }
 
+//===================GET USER FROM STORAGE BY ID================//
+const getUser = (id) => {
+    const Users = fetchUsers();
+    return Users.filter((user) => {
+        return +user.userID === +id;
+    });
+}
+
+//===================ADD USER TO STORAGE================//
 const addUser = (user) => {
     const Users = fetchUsers();
     Users.push(user);
-	console.log('ADD USER', Users);
 
     localStorage.Users = JSON.stringify(Users);
 }
 
+//===================UPDATE USER IN STORAGE================//
 const updateUser = (newUser) => {
 	const Users = fetchUsers();
-	console.log('newUser', newUser);
 	const update = Users.map((user) => {
-        return +user.userID === +user.userID ? newUser : user;
+        return +user.userID === +newUser.userID ? newUser : user;
     });
-	console.log('UPDATE USER', update);
+
 	localStorage.Users = JSON.stringify(update);
 }
 
-export  { fetchUsers, addUser, deleteUser, updateUser };
+export  { fetchUsers, addUser, deleteUser, updateUser, getUser };
